@@ -15,6 +15,7 @@
 # graph form, with the matrix defined to be the Laplacian of the input graph.
 
 import numpy as np
+import time
 
 # Get the gradient of A at x
 def grad(A, b, x):
@@ -22,32 +23,30 @@ def grad(A, b, x):
 
 # Error on the right-hand side. b - Ax
 def rhe(A, b, x):
-    b - A.dot(x)
+    return b - A.dot(x)
 
 def get_matrix():
+    return np.array([1, -1, 0,     -1, 2, -1,     0, -1, 2 ]).reshape((3, 3))
 
-
-def get_target():
-
+def get_target(length):
+    return np.array([x for x in range(length)])
 
 def report(A, b, x):
-    print "x = ", x
-    print "error: ", rhe(A, b, x)
+    print "x =", x
+    print "Error norm:", np.linalg.norm(rhe(A, b, x))
 
 # ititial conditions
 A = get_matrix()
-b = get_target()
-print "A = ", A
-print "b = ", b
+b = get_target(A.shape[0])
 
 x = np.array([0 for i in range(b.shape[0])])
-report(A, b, x)
 
 # do the actual descent
-grad = grad(A, b, x)
-while grad is not 0:
+g = grad(A, b, x)
+err = float(raw_input("Desired gradient norm? "))
+while np.linalg.norm(g) > err:
     r = rhe(A, b, x)
     x = x + ((1. * r.dot(r)) / (r.dot(A).dot(r))) * r
-    grad = grad(A, b, x)
+    g = grad(A, b, x)
 
 report(A, b, x)
