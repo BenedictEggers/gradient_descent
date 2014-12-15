@@ -29,7 +29,11 @@ def get_matrix():
     return np.array([1, -1, 0,     -1, 2, -1,     0, -1, 2 ]).reshape((3, 3))
 
 def get_target(length):
-    return np.array([x for x in range(length)])
+    print "Please input", length, "numbers for the target vector"
+    ret = []
+    while len(ret) < length:
+        ret.append(int(raw_input("Next number? ")))
+    return np.array(ret)
 
 def report(A, b, x):
     print "x =", x
@@ -43,10 +47,14 @@ x = np.array([0 for i in range(b.shape[0])])
 
 # do the actual descent
 g = grad(A, b, x)
-err = float(raw_input("Desired gradient norm? "))
-while np.linalg.norm(g) > err:
+# Ideally we'd go until the norm equals 0, but numerical analysis is a thing
+while np.linalg.norm(g) > 0.00005:
     r = rhe(A, b, x)
     x = x + ((1. * r.dot(r)) / (r.dot(A).dot(r))) * r
     g = grad(A, b, x)
+
+# Now we can round, since we're pretty much guaranteed to be within .5 of
+# the correct answer
+x = np.array([round(n) for n in x])
 
 report(A, b, x)
