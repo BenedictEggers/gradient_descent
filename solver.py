@@ -24,17 +24,30 @@ def grad(A, b, x):
 def rhe(A, b, x):
     b - A.dot(x)
 
+def get_matrix():
+
+
+def get_target():
+
+
+def report(A, b, x):
+    print "x = ", x
+    print "error: ", rhe(A, b, x)
 
 # ititial conditions
 A = get_matrix()
 b = get_target()
+print "A = ", A
+print "b = ", b
+
 x = np.array([0 for i in range(b.shape[0])])
 report(A, b, x)
 
-# do the actual descente
+# do the actual descent
 grad = grad(A, b, x)
 while grad is not 0:
-
-
+    r = rhe(A, b, x)
+    x = x + ((1. * r.dot(r)) / (r.dot(A).dot(r))) * r
+    grad = grad(A, b, x)
 
 report(A, b, x)
