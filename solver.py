@@ -71,8 +71,4 @@ while np.linalg.norm(g) > 0.000005:
     x = x + ((1. * r.dot(r)) / (r.dot(A).dot(r))) * r
     g = grad(A, b, x)
 
-# Now we can round, since we're pretty much guaranteed to be within .5 of
-# the correct answer
-x = np.array([round(n) for n in x])
-
 report(A, b, x)
