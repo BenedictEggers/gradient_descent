@@ -26,7 +26,25 @@ def rhe(A, b, x):
     return b - A.dot(x)
 
 def get_matrix():
-    return np.array([1, -1, 0,     -1, 2, -1,     0, -1, 2 ]).reshape((3, 3))
+    ec = int(raw_input("How many edges on input graph? "))
+    edges = []
+    for i in xrange(ec):
+        inp = raw_input("Next edge(of the form '<node_#>, <node_#>'): ")
+        edges.append((int(inp.split(", ")[0]), int(inp.split(", ")[1])))
+
+    m = int(max([max(e[0], e[1]) for e in edges]))
+
+    ret = np.zeros((m, m), dtype = np.int)
+
+    for e in edges:
+        ret[e[0] - 1][e[1] - 1] = ret[e[1] - 1][e[0] - 1] = -1
+        # These should be "+= 1" for the true Laplacian, but we need the
+        # matrix to be non-singular. So...
+        ret[e[0] - 1][e[0] - 1] += 2
+        ret[e[1] - 1][e[1] - 1] += 2
+
+    print ret
+    return ret
 
 def get_target(length):
     print "Please input", length, "numbers for the target vector"
@@ -48,7 +66,7 @@ x = np.array([0 for i in range(b.shape[0])])
 # do the actual descent
 g = grad(A, b, x)
 # Ideally we'd go until the norm equals 0, but numerical analysis is a thing
-while np.linalg.norm(g) > 0.00005:
+while np.linalg.norm(g) > 0.000005:
     r = rhe(A, b, x)
     x = x + ((1. * r.dot(r)) / (r.dot(A).dot(r))) * r
     g = grad(A, b, x)
